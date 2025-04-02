@@ -1,0 +1,30 @@
+[gd_scene load_steps=7 format=3 uid="uid://dhcyuj6kofj8m"]
+
+[ext_resource type="ArrayMesh" uid="uid://lxbln03rpfpe" path="res://elements/eolienne1.obj" id="1_itxqv"]
+[ext_resource type="PackedScene" uid="uid://bgchphgoe7avi" path="res://elements/cigogne/scene.gltf" id="2_v0l8b"]
+[ext_resource type="PackedScene" uid="uid://cngsjfb18ue1e" path="res://elements/Flamingo.glb" id="3_wp4xf"]
+[ext_resource type="ArrayMesh" uid="uid://d205sgb353v6y" path="res://elements/Landscape.obj" id="4_brvut"]
+[ext_resource type="PackedScene" uid="uid://33avhtiu0243" path="res://elements/Torre_Energia_Eolica.fbx" id="5_0ha60"]
+[ext_resource type="PackedScene" uid="uid://bqvuh6415np57" path="res://elements/birds.glb" id="6_4j5ol"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="WindTurbines" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+mesh = ExtResource("1_itxqv")
+
+[node name="Sketchfab_Scene" parent="." instance=ExtResource("2_v0l8b")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.94543, 10.1563, 9.89284)
+
+[node name="AuxScene" parent="." instance=ExtResource("3_wp4xf")]
+transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 14.9033, 12.1961, 12.8178)
+
+[node name="Landscape" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 533.004, -265.176, -133.505)
+mesh = ExtResource("4_brvut")
+
+[node name="Torre_Energia_Eolica" parent="." instance=ExtResource("5_0ha60")]
+transform = Transform3D(2.82843, 0, 2.82843, 0, 4, 0, -2.82843, 0, 2.82843, 5.37064, 8.46113, -62.2197)
+
+[node name="birds" parent="." instance=ExtResource("6_4j5ol")]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 10, 15, 10)
