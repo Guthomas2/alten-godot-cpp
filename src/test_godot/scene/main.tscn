@@ -1,30 +1,111 @@
-[gd_scene load_steps=7 format=3 uid="uid://dhcyuj6kofj8m"]
+[gd_scene load_steps=14 format=3 uid="uid://dhcyuj6kofj8m"]
 
-[ext_resource type="ArrayMesh" uid="uid://lxbln03rpfpe" path="res://elements/eolienne1.obj" id="1_itxqv"]
+[ext_resource type="Script" uid="uid://ce6tko1b5x5v3" path="res://scene/main.gd" id="1_p1hux"]
+[ext_resource type="PackedScene" uid="uid://drdktoqkrbhcd" path="res://scene/petits_oiseaux.tscn" id="2_b5f6u"]
 [ext_resource type="PackedScene" uid="uid://bgchphgoe7avi" path="res://elements/cigogne/scene.gltf" id="2_v0l8b"]
 [ext_resource type="PackedScene" uid="uid://cngsjfb18ue1e" path="res://elements/Flamingo.glb" id="3_wp4xf"]
-[ext_resource type="ArrayMesh" uid="uid://d205sgb353v6y" path="res://elements/Landscape.obj" id="4_brvut"]
 [ext_resource type="PackedScene" uid="uid://33avhtiu0243" path="res://elements/Torre_Energia_Eolica.fbx" id="5_0ha60"]
-[ext_resource type="PackedScene" uid="uid://bqvuh6415np57" path="res://elements/birds.glb" id="6_4j5ol"]
+[ext_resource type="ArrayMesh" uid="uid://d205sgb353v6y" path="res://elements/Landscape.obj" id="5_4j5ol"]
+[ext_resource type="PackedScene" uid="uid://bdg22oj4u0wn6" path="res://elements/Wind Turbines.FBX" id="6_p1hux"]
+[ext_resource type="PackedScene" uid="uid://bpjkp715qluk6" path="res://scene/eolienne_m_1.tscn" id="8_b5f6u"]
+[ext_resource type="Texture2D" uid="uid://by7hopc84bxod" path="res://elements/kloofendal_48d_partly_cloudy_puresky_1k.exr" id="8_of57s"]
 
-[node name="Node3D" type="Node3D"]
+[sub_resource type="Shader" id="Shader_b5f6u"]
+code = "
+// NOTE: Shader automatically converted from Godot Engine 4.4.1.stable's PanoramaSkyMaterial.
 
-[node name="WindTurbines" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
-mesh = ExtResource("1_itxqv")
+shader_type sky;
 
-[node name="Sketchfab_Scene" parent="." instance=ExtResource("2_v0l8b")]
+uniform sampler2D source_panorama : filter_linear, source_color, hint_default_black;
+uniform float exposure : hint_range(0, 128) = 1.0;
+uniform float speed = 0.002;
+
+void sky() {
+	vec2 skyCoords = vec2(SKY_COORDS.x + TIME * speed, SKY_COORDS.y);
+	COLOR = texture(source_panorama, skyCoords).rgb * exposure;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tqoya"]
+shader = SubResource("Shader_b5f6u")
+shader_parameter/source_panorama = ExtResource("8_of57s")
+shader_parameter/exposure = 0.8
+shader_parameter/speed = 0.002
+
+[sub_resource type="Sky" id="Sky_k65ib"]
+sky_material = SubResource("ShaderMaterial_tqoya")
+
+[sub_resource type="Environment" id="Environment_p1hux"]
+background_mode = 2
+sky = SubResource("Sky_k65ib")
+
+[node name="Node3D" type="Node3D" node_paths=PackedStringArray("markerDirection", "markerSpawnOiseau")]
+script = ExtResource("1_p1hux")
+sceneOiseau = ExtResource("2_b5f6u")
+markerDirection = NodePath("Direction_oiseaux_0")
+markerSpawnOiseau = NodePath("Spawn_oiseaux_0")
+
+[node name="CameraPivot_1" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 20, 35, 14.952)
+
+[node name="Camera3D" type="Camera3D" parent="CameraPivot_1"]
+
+[node name="CameraPivot_2" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 12, 5)
+
+[node name="Camera3D" type="Camera3D" parent="CameraPivot_2"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 0)
+visible = false
+
+[node name="CameraPivot_0" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 12, 20)
+
+[node name="Camera3D" type="Camera3D" parent="CameraPivot_0"]
+visible = false
+
+[node name="Elmts" type="Marker3D" parent="."]
+
+[node name="Sketchfab_Scene" parent="Elmts" instance=ExtResource("2_v0l8b")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.94543, 10.1563, 9.89284)
+visible = false
 
-[node name="AuxScene" parent="." instance=ExtResource("3_wp4xf")]
+[node name="AuxScene" parent="Elmts" instance=ExtResource("3_wp4xf")]
 transform = Transform3D(0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 14.9033, 12.1961, 12.8178)
+visible = false
 
-[node name="Landscape" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 533.004, -265.176, -133.505)
-mesh = ExtResource("4_brvut")
-
-[node name="Torre_Energia_Eolica" parent="." instance=ExtResource("5_0ha60")]
+[node name="Torre_Energia_Eolica" parent="Elmts" instance=ExtResource("5_0ha60")]
 transform = Transform3D(2.82843, 0, 2.82843, 0, 4, 0, -2.82843, 0, 2.82843, 5.37064, 8.46113, -62.2197)
+visible = false
 
-[node name="birds" parent="." instance=ExtResource("6_4j5ol")]
-transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 10, 15, 10)
+[node name="Landscape" type="MeshInstance3D" parent="Elmts"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 533.004, -265.176, -133.505)
+mesh = ExtResource("5_4j5ol")
+skeleton = NodePath("../..")
+
+[node name="Wind Turbines" parent="Elmts" instance=ExtResource("6_p1hux")]
+transform = Transform3D(0.999715, 0.0238913, 0, -0.0238913, 0.999715, 0, 0, 0, 1, -0.345119, -3.4942, 5.80361)
+
+[node name="eolienne_m1" parent="Elmts" instance=ExtResource("8_b5f6u")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 5.37064, 8.46113, -62.2197)
+
+[node name="OiseauTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+autostart = true
+
+[node name="Direction_oiseaux_0" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 12, 20)
+
+[node name="Spawn_oiseaux_0" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 12, 1.19868)
+
+[node name="Direction_oiseaux_1" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 46.7359, 12, 7.7588)
+
+[node name="Spawn_oiseaux_1" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.98747, 12, 15.2074)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_p1hux")
+
+[connection signal="timeout" from="OiseauTimer" to="." method="_on_oiseau_timer_timeout"]
