@@ -23,7 +23,7 @@ window/size/viewport_height=720
 [editor]
 
 movie_writer/mjpeg_quality=1.0
-movie_writer/movie_file="C:/Users/gthomas/Documents/Alten/alten-godot-cpp/src/test_godot/camera/Dessus_Oiseaux/img_.png"
+movie_writer/movie_file="C:/Users/gthomas/Documents/Alten/alten-godot-cpp/src/test_godot/camera/Dessus_Oiseaux/video_.avi"
 movie_writer/fps=10
 
 [filesystem]
